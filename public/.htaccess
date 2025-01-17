@@ -1,0 +1,16 @@
+RewriteEngine On
+
+RewriteBase /
+
+<Files .htaccess>
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]
+
+AddDefaultCharset UTF-8
+
+Options -Indexes
