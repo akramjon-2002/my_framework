@@ -9,8 +9,21 @@ class Database {
 
     public static function connect(): PDO {
         if (self::$connection === null) {
-            $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s;', getenv('DB_HOST'), getenv('DB_PORT'), getenv('DB_NAME'));
-            self::$connection = new PDO($dsn, getenv('DB_USER'), getenv('DB_PASSWORD'), [
+            $host = $_ENV['DB_HOST'];
+            $port = $_ENV['DB_PORT'];
+            $dbname = $_ENV['DB_NAME'];
+            
+            echo "Debug: Database configuration\n";
+            echo "Host: " . ($host ?: 'not set') . "\n";
+            echo "Port: " . ($port ?: 'not set') . "\n";
+            echo "Database: " . ($dbname ?: 'not set') . "\n";
+            
+            if (!$host || !$port || !$dbname) {
+                throw new \Exception('Database configuration is incomplete. Check your .env file.');
+            }
+            
+            $dsn = "pgsql:host={$host};port={$port};dbname={$dbname}";
+            self::$connection = new PDO($dsn, $_ENV['DB_USER'], $_ENV['DB_PASSWORD'], [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             ]);

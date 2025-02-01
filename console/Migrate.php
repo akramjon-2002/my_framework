@@ -18,9 +18,17 @@ class Migrate
     public function run()
     {
         $migrations = $this->getMigrations();
+        if (empty($migrations)) {
+            echo "No migrations found.\n";
+            return;
+        }
+        
+        echo "Starting migrations...\n";
         foreach ($migrations as $migration) {
+            echo "\nApplying migration: " . basename($migration) . "\n";
             $this->applyMigration($migration);
         }
+        echo "\nAll migrations completed successfully!\n";
     }
 
     private function getMigrations()
