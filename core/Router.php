@@ -5,16 +5,29 @@ namespace Core;
 class Router {
     private array $routes = [];
 
-    public function add(string $method, string $path, callable|array $handler): void {
-        $this->routes[] = compact('method', 'path', 'handler');
+    public function add(string $method, string $path, callable|array $handler, ?callable $middleware = null): void {
+        $this->routes[] = [
+            'method' => $method,
+            'path' => $path,
+            'handler' => $handler,
+            'middleware' => $middleware
+        ];
     }
 
     public function dispatch(string $method, string $uri): void {
         foreach ($this->routes as $route) {
             if ($route['method'] === $method && $route['path'] === $uri) {
+                // Если есть middleware, выполняем его
+                if (isset($route['middleware'])) {
+                    $middlewareResult = call_user_func($route['middleware']);
+                    if ($middlewareResult === false) {
+                        return;
+                    }
+                }
+
                 if (is_array($route['handler'])) {
-                    [$class, $method] = $route['handler'];
-                    (new $class())->$method();
+                    [$controller, $method] = $route['handler'];
+                    $controller->$method();
                 } else {
                     call_user_func($route['handler']);
                 }

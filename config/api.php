@@ -13,25 +13,25 @@ $authMiddleware = new AuthMiddleware($authenticator);
 
 return [
     // Открытые маршруты
-    ['method' => 'POST', 'path' => '/register', 'handler' => [new AuthController($authenticator), 'register']],
-    ['method' => 'POST', 'path' => '/login', 'handler' => [new AuthController($authenticator), 'login']],
+    ['method' => 'POST', 'path' => '/api/register', 'handler' => [new AuthController($authenticator), 'register']],
+    ['method' => 'POST', 'path' => '/api/login', 'handler' => [new AuthController($authenticator), 'login']],
     
     // Защищенные маршруты
     [
         'method' => 'GET',
-        'path' => '/posts',
+        'path' => '/api/posts',
         'handler' => [new PostController($authenticator), 'index'],
         'middleware' => [$authMiddleware, 'handle']
     ],
     [
         'method' => 'POST',
-        'path' => '/posts',
+        'path' => '/api/posts',
         'handler' => [new PostController($authenticator), 'store'],
         'middleware' => [$authMiddleware, 'handle']
     ],
     [
         'method' => 'POST',
-        'path' => '/logout',
+        'path' => '/api/logout',
         'handler' => [new AuthController($authenticator), 'logout'],
         'middleware' => [$authMiddleware, 'handle']
     ]

@@ -13,11 +13,6 @@ class Database {
             $port = $_ENV['DB_PORT'];
             $dbname = $_ENV['DB_NAME'];
             
-            echo "Debug: Database configuration\n";
-            echo "Host: " . ($host ?: 'not set') . "\n";
-            echo "Port: " . ($port ?: 'not set') . "\n";
-            echo "Database: " . ($dbname ?: 'not set') . "\n";
-            
             if (!$host || !$port || !$dbname) {
                 throw new \Exception('Database configuration is incomplete. Check your .env file.');
             }
